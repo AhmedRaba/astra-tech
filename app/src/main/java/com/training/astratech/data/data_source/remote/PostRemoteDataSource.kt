@@ -10,7 +10,6 @@ class PostRemoteDataSource @Inject constructor(private val apiService: ApiServic
 
     suspend fun getPosts(): Response<PostResponse> {
         val response = apiService.getPosts()
-        Log.e("PostRemoteDataSource", "getPosts: ${response.body()}")
         return response
     }
 

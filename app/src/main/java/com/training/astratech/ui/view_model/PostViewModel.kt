@@ -1,4 +1,4 @@
-package com.training.astratech.ui
+package com.training.astratech.ui.view_model
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -27,6 +27,7 @@ class PostViewModel @Inject constructor(private val postRepository: PostReposito
                 val response = postRepository.getPosts()
                 if (response.isSuccessful) {
                     _posts.postValue(response.body())
+                    Log.e("PostViewModel", "fetchPosts: ${response.body()}", )
                 } else {
                     _error.postValue(response.errorBody().toString())
                     Log.e(

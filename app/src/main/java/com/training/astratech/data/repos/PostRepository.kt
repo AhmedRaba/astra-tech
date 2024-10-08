@@ -7,4 +7,6 @@ interface PostRepository {
 
     suspend fun getPosts(): Response<PostResponse>
 
+
+
 }
