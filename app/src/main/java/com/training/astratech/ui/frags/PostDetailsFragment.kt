@@ -22,7 +22,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import com.training.astratech.data.model.PostUpdateRequest
+import com.training.astratech.data.model.UpdatePostRequest
 import com.training.astratech.databinding.FragmentPostDetailsBinding
 import com.training.astratech.ui.view_model.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -90,9 +90,15 @@ class PostDetailsFragment : Fragment() {
 
 
     private fun observeViewModels() {
-        viewModel.updateResponseItem.observe(viewLifecycleOwner) {
+        viewModel.updatePostResponse.observe(viewLifecycleOwner) {
             showSnackBar(it)
+            findNavController().navigateUp()
         }
+        viewModel.deletePostResponse.observe(viewLifecycleOwner) {
+            showSnackBar(it)
+            findNavController().navigateUp()
+        }
+
         viewModel.error.observe(viewLifecycleOwner) {
             Log.e("observeViewModelsError", "observeViewModels: $it")
             showSnackBar(it)
@@ -101,7 +107,9 @@ class PostDetailsFragment : Fragment() {
     }
 
     private fun openGallery() {
-        getImageLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        binding.icUpdatePostImage.setOnClickListener {
+            getImageLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+        }
     }
 
     private fun validateInputs() {
@@ -139,7 +147,7 @@ class PostDetailsFragment : Fragment() {
         )
 
         if (finalImageFile != null) {
-            val postItem = PostUpdateRequest(
+            val postItem = UpdatePostRequest(
                 args.postItem.id, postTitle, postMessage, finalImageFile
             )
             viewModel.updatePost(postItem)

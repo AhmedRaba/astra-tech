@@ -5,8 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.training.astratech.data.model.CreatePostRequest
 import com.training.astratech.data.model.PostResponseItem
-import com.training.astratech.data.model.PostUpdateRequest
+import com.training.astratech.data.model.UpdatePostRequest
 import com.training.astratech.data.repos.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,11 +20,22 @@ class PostViewModel @Inject constructor(private val postRepository: PostReposito
     private val _posts = MutableLiveData<List<PostResponseItem>>()
     val posts: LiveData<List<PostResponseItem>> = _posts
 
+    private val _createPostResponse = MutableLiveData<String>()
+    val createPostResponse: LiveData<String> = _createPostResponse
+
     private val _updatePostResponse = MutableLiveData<String>()
-    val updateResponseItem: LiveData<String> = _updatePostResponse
+    val updatePostResponse: LiveData<String> = _updatePostResponse
+
+    private val _deletePostResponse = MutableLiveData<String>()
+    val deletePostResponse: LiveData<String> = _deletePostResponse
+
+
+    private val _refreshPosts = MutableLiveData<Boolean>()
+    val refreshPosts: LiveData<Boolean> get() = _refreshPosts
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
+
 
     fun fetchPosts() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -48,10 +60,27 @@ class PostViewModel @Inject constructor(private val postRepository: PostReposito
     }
 
 
-    fun updatePost(postUpdateRequest: PostUpdateRequest) {
+    fun createPost(createPostRequest: CreatePostRequest) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = postRepository.updatePost(postUpdateRequest)
+                val response = postRepository.createPost(createPostRequest)
+                if (response.isSuccessful) {
+                    _createPostResponse.postValue(response.body())
+                } else {
+                    _error.postValue(response.errorBody()?.string())
+                }
+
+            } catch (e: Exception) {
+                Log.e("PostViewModel", "createPost: $e")
+            }
+        }
+    }
+
+
+    fun updatePost(updatePostRequest: UpdatePostRequest) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = postRepository.updatePost(updatePostRequest)
                 if (response.isSuccessful) {
                     _updatePostResponse.postValue(response.body())
                 } else {
@@ -70,7 +99,7 @@ class PostViewModel @Inject constructor(private val postRepository: PostReposito
             try {
                 val response = postRepository.deletePost(id)
                 if (response.isSuccessful) {
-                    _updatePostResponse.postValue(response.body())
+                    _deletePostResponse.postValue(response.body())
                 } else {
                     _error.postValue(response.code().toString())
                 }
@@ -79,6 +108,10 @@ class PostViewModel @Inject constructor(private val postRepository: PostReposito
             }
 
         }
+    }
+
+    fun refreshPosts() {
+        _refreshPosts.value = true
     }
 
 }

@@ -40,7 +40,6 @@ class HomeFragment : Fragment() {
         fetchPosts()
         addPost()
 
-
     }
 
     private fun setupRecyclerView() {
@@ -51,6 +50,12 @@ class HomeFragment : Fragment() {
     private fun observeViewModels() {
         viewModel.posts.observe(viewLifecycleOwner) {
             updatePostsList(it)
+        }
+
+        viewModel.refreshPosts.observe(viewLifecycleOwner) { shouldRefresh ->
+            if (shouldRefresh) {
+                fetchPosts()
+            }
         }
 
         viewModel.error.observe(viewLifecycleOwner) {

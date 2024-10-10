@@ -30,14 +30,16 @@ interface ApiService {
 
     @POST("deletepost")
     suspend fun deletePost(
-        @Body request: DeletePostRequest
+        @Body request: DeletePostRequest,
     ): Response<String>
 
     @POST("create")
     @Multipart
     suspend fun createPost(
-        @Body request: CreatePostRequest
-    ):Response<String>
+        @Part("post_title") postTitle: RequestBody,
+        @Part("post_message") postMessage: RequestBody,
+        @Part postImage: MultipartBody.Part,
+    ): Response<String>
 
 
 }
