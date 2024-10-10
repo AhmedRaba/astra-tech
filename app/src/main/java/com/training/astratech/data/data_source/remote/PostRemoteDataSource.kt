@@ -1,7 +1,7 @@
 package com.training.astratech.data.data_source.remote
 
 import com.training.astratech.data.api.ApiService
-import com.training.astratech.data.model.PostDeleteRequest
+import com.training.astratech.data.model.DeletePostRequest
 import com.training.astratech.data.model.PostResponse
 import com.training.astratech.data.model.PostUpdateRequest
 import okhttp3.MediaType
@@ -45,7 +45,7 @@ class PostRemoteDataSource @Inject constructor(private val apiService: ApiServic
 
 
     suspend fun deletePost(id: Int): Response<String> {
-        return apiService.deletePost(PostDeleteRequest(id))
+        return apiService.deletePost(DeletePostRequest(id))
     }
 
 

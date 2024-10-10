@@ -70,8 +70,9 @@ dependencies {
     kapt(libs.hilt.android.compiler)
 
 
-    //Coil
-    implementation(libs.coil)
+    //Glide
+    implementation (libs.glide)
+
 
 
 }

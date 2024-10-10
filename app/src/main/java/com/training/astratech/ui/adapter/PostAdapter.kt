@@ -3,16 +3,15 @@ package com.training.astratech.ui.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import coil3.load
-import coil3.request.crossfade
-import coil3.request.placeholder
-import coil3.request.transformations
-import coil3.transform.CircleCropTransformation
-import com.training.astratech.R
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.training.astratech.data.model.PostResponseItem
 import com.training.astratech.databinding.ItemPostBinding
 
-class PostAdapter(private val posts: List<PostResponseItem>,val onClickListener: (PostResponseItem) -> Unit) :
+class PostAdapter(
+    private val posts: List<PostResponseItem>,
+    val onClickListener: (PostResponseItem) -> Unit,
+) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
 
@@ -34,11 +33,10 @@ class PostAdapter(private val posts: List<PostResponseItem>,val onClickListener:
 
             tvPostTitle.text = currentPost.postTitle
 
-            ivPost.load(currentPost.postImage) {
-                transformations(CircleCropTransformation())
-                crossfade(true)
-                crossfade(1000)
-            }
+            Glide.with(root.context)
+                .load(currentPost.postImage)
+                .transform(CircleCrop())
+                .into(ivPost)
 
 
             root.setOnClickListener {
