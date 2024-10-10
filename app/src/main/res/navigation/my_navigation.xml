@@ -7,7 +7,31 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.training.astratech.HomeFragment"
+        android:name="com.training.astratech.ui.frags.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_postDetailsFragment"
+            app:destination="@id/postDetailsFragment" />
+        <argument
+            android:name="postItem"
+            app:argType="com.training.astratech.data.model.PostResponseItem" />
+        <action
+            android:id="@+id/action_homeFragment_to_addPostDialogFragment"
+            app:destination="@id/addPostDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/postDetailsFragment"
+        android:name="com.training.astratech.ui.frags.PostDetailsFragment"
+        android:label="fragment_post_details"
+        tools:layout="@layout/fragment_post_details" >
+        <argument
+            android:name="postItem"
+            app:argType="com.training.astratech.data.model.PostResponseItem" />
+    </fragment>
+    <dialog
+        android:id="@+id/addPostDialogFragment"
+        android:name="com.training.astratech.ui.frags.AddPostDialogFragment"
+        android:label="fragment_add_post_dialog"
+        tools:layout="@layout/fragment_add_post_dialog" />
 </navigation>

@@ -17,7 +17,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val BASE_URL = " https://task.astra-tech.net/fronendtask/public/api/"
+    private const val BASE_URL = "https://task.astra-tech.net/fronendtask/public/api/"
 
     @Provides
     @Singleton

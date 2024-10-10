@@ -1,4 +1,4 @@
-package com.training.astratech
+package com.training.astratech.ui.frags
 
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import com.training.astratech.R
 import com.training.astratech.data.model.PostResponseItem
 import com.training.astratech.databinding.FragmentHomeBinding
 import com.training.astratech.ui.adapter.PostAdapter
@@ -26,25 +29,33 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         setupRecyclerView()
         observeViewModels()
         fetchPosts()
+        addPost()
 
 
-
-        return binding.root
     }
 
     private fun setupRecyclerView() {
-        binding.rvPost.adapter = PostAdapter(emptyList())
+        binding.rvPost.adapter = PostAdapter(emptyList()) {}
     }
 
 
     private fun observeViewModels() {
         viewModel.posts.observe(viewLifecycleOwner) {
             updatePostsList(it)
-            Log.e("HomeFragment", "observeViewModels: $it", )
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) {
+            Log.e("HomeFragment", "observeViewModels: $it")
+            showSnackBar(it)
         }
     }
 
@@ -53,9 +64,24 @@ class HomeFragment : Fragment() {
     }
 
     private fun updatePostsList(posts: List<PostResponseItem>) {
-        val adapter = PostAdapter(posts)
+        val adapter = PostAdapter(posts) {
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToPostDetailsFragment(it)
+            findNavController().navigate(action)
+        }
         binding.rvPost.adapter = adapter
     }
 
+
+    private fun addPost() {
+        binding.fabAddPost.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_addPostDialogFragment)
+        }
+    }
+
+
+    private fun showSnackBar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
 
 }

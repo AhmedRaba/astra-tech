@@ -12,7 +12,7 @@ import com.training.astratech.R
 import com.training.astratech.data.model.PostResponseItem
 import com.training.astratech.databinding.ItemPostBinding
 
-class PostAdapter(private val posts: List<PostResponseItem>) :
+class PostAdapter(private val posts: List<PostResponseItem>,val onClickListener: (PostResponseItem) -> Unit) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
 
@@ -36,9 +36,13 @@ class PostAdapter(private val posts: List<PostResponseItem>) :
 
             ivPost.load(currentPost.postImage) {
                 transformations(CircleCropTransformation())
-                placeholder(R.drawable.ic_launcher_background)
                 crossfade(true)
                 crossfade(1000)
+            }
+
+
+            root.setOnClickListener {
+                onClickListener(currentPost)
             }
 
 
