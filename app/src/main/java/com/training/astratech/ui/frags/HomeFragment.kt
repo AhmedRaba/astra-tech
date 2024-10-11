@@ -108,12 +108,14 @@ class HomeFragment : Fragment() {
     private fun showRetryButton(shouldShow: Boolean) {
         if (shouldShow) {
             binding.btnRetry.visibility = View.VISIBLE
+            binding.tvCheckInternet.visibility = View.VISIBLE
             binding.rvPost.visibility = View.GONE
             binding.btnRetry.setOnClickListener {
                 fetchPosts()
             }
         } else {
             binding.btnRetry.visibility = View.GONE
+            binding.tvCheckInternet.visibility = View.GONE
         }
     }
 

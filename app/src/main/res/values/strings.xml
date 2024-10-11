@@ -10,4 +10,5 @@
     <string name="delete">Delete</string>
     <string name="post_app">Post App</string>
     <string name="retry">Retry</string>
+    <string name="check_your_internet_connection">Check your internet connection</string>
 </resources>
