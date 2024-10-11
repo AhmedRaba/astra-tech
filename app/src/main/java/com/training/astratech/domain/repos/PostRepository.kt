@@ -1,8 +1,8 @@
-package com.training.astratech.data.repos
+package com.training.astratech.domain.repos
 
-import com.training.astratech.data.model.CreatePostRequest
+import com.training.astratech.domain.model.CreatePostRequest
 import com.training.astratech.data.model.PostResponse
-import com.training.astratech.data.model.UpdatePostRequest
+import com.training.astratech.domain.model.UpdatePostRequest
 import retrofit2.Response
 
 interface PostRepository {

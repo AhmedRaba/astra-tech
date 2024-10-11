@@ -22,8 +22,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
-import com.training.astratech.data.model.UpdatePostRequest
 import com.training.astratech.databinding.FragmentPostDetailsBinding
+import com.training.astratech.domain.model.UpdatePostRequest
+import com.training.astratech.ui.view_model.PostState
 import com.training.astratech.ui.view_model.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -91,17 +92,30 @@ class PostDetailsFragment : Fragment() {
 
     private fun observeViewModels() {
         viewModel.updatePostResponse.observe(viewLifecycleOwner) {
-            showSnackBar(it)
-            findNavController().navigateUp()
+            when (it) {
+
+                is PostState.Success -> showSnackBar(it.data)
+                is PostState.Error -> showSnackBar(it.message.toString())
+                PostState.Loading ->{}
+            }
+
         }
         viewModel.deletePostResponse.observe(viewLifecycleOwner) {
-            showSnackBar(it)
-            findNavController().navigateUp()
+            when (it) {
+
+                is PostState.Success -> showSnackBar(it.data)
+                is PostState.Error -> showSnackBar(it.message.toString())
+                PostState.Loading ->{}
+            }
         }
 
         viewModel.error.observe(viewLifecycleOwner) {
-            Log.e("observeViewModelsError", "observeViewModels: $it")
-            showSnackBar(it)
+            when (it) {
+
+                is PostState.Success -> showSnackBar(it.data)
+                is PostState.Error -> showSnackBar(it.message.toString())
+                PostState.Loading ->{}
+            }
         }
 
     }
@@ -138,12 +152,11 @@ class PostDetailsFragment : Fragment() {
                 updatePost(postTitle, postMessage)
             }
         }
-
     }
 
     private fun updatePost(postTitle: String, postMessage: String) {
         val finalImageFile = selectedImageFile ?: saveImageViewToFile(
-            binding.ivPost, requireContext(), "update_post_image.png"
+            binding.ivPost, requireContext()
         )
 
         if (finalImageFile != null) {
@@ -163,6 +176,7 @@ class PostDetailsFragment : Fragment() {
         binding.btnDelete.setOnClickListener {
             val id = args.postItem.id
             viewModel.deletePost(id)
+            findNavController().navigateUp()
         }
 
     }
@@ -187,7 +201,6 @@ class PostDetailsFragment : Fragment() {
     private fun saveImageViewToFile(
         imageView: ImageView,
         context: Context,
-        fileName: String,
     ): File? {
 
         val drawable: Drawable? = imageView.drawable
@@ -196,7 +209,10 @@ class PostDetailsFragment : Fragment() {
             val bitmap: Bitmap = drawable.bitmap
 
 
-            val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName)
+            val file = File(
+                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                "update_post_image.png"
+            )
 
 
             return try {

@@ -1,9 +1,11 @@
 package com.training.astratech.di
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.training.astratech.data.api.ApiService
 import com.training.astratech.data.data_source.remote.PostRemoteDataSource
-import com.training.astratech.data.repos.PostRepository
 import com.training.astratech.data.repos.PostRepositoryImpl
+import com.training.astratech.domain.repos.PostRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,11 +21,16 @@ object AppModule {
 
     private const val BASE_URL = "https://task.astra-tech.net/fronendtask/public/api/"
 
+    private val gson: Gson = GsonBuilder()
+        .setLenient()
+        .create()
+
+
     @Provides
     @Singleton
     fun providesApiService(): ApiService {
         return Retrofit.Builder().baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build().create(ApiService::class.java)
     }
 

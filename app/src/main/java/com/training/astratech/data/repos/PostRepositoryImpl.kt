@@ -1,9 +1,10 @@
 package com.training.astratech.data.repos
 
 import com.training.astratech.data.data_source.remote.PostRemoteDataSource
-import com.training.astratech.data.model.CreatePostRequest
+import com.training.astratech.domain.model.CreatePostRequest
 import com.training.astratech.data.model.PostResponse
-import com.training.astratech.data.model.UpdatePostRequest
+import com.training.astratech.domain.model.UpdatePostRequest
+import com.training.astratech.domain.repos.PostRepository
 import retrofit2.Response
 import javax.inject.Inject
 

@@ -2,4 +2,11 @@
     <string name="app_name">Astra Tech</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="post_title">Post title</string>
+    <string name="post_message">Post message</string>
+    <string name="save">Save</string>
+    <string name="edit_post">Edit post</string>
+    <string name="add_post">Add post</string>
+    <string name="delete">Delete</string>
+    <string name="post_app">Post App</string>
 </resources>

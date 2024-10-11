@@ -8,6 +8,17 @@
     android:padding="16dp"
     tools:context=".ui.frags.AddPostDialogFragment">
 
+    <TextView
+        android:id="@+id/tv_add_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="Add Post"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="16dp" />
+
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_post_image"
@@ -17,7 +28,7 @@
         app:cardCornerRadius="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/tv_add_post">
 
         <ImageView
             android:id="@+id/iv_add_post_image"
@@ -55,7 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="Post title"
+        android:hint="@string/post_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_post_image"
@@ -74,7 +85,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="Post message"
+        android:hint="@string/post_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/text_input_add_post_title"
@@ -94,7 +105,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:backgroundTint="@color/green"
-        android:text="Save"
+        android:text="@string/save"
         android:textColor="@color/white"
         app:cornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"

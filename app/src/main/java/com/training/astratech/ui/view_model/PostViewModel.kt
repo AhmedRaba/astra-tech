@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.training.astratech.data.model.CreatePostRequest
 import com.training.astratech.data.model.PostResponseItem
-import com.training.astratech.data.model.UpdatePostRequest
-import com.training.astratech.data.repos.PostRepository
+import com.training.astratech.domain.model.CreatePostRequest
+import com.training.astratech.domain.model.UpdatePostRequest
+import com.training.astratech.domain.repos.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,44 +17,38 @@ import javax.inject.Inject
 @HiltViewModel
 class PostViewModel @Inject constructor(private val postRepository: PostRepository) : ViewModel() {
 
-    private val _posts = MutableLiveData<List<PostResponseItem>>()
-    val posts: LiveData<List<PostResponseItem>> = _posts
+    private val _postsResponse = MutableLiveData<PostState<List<PostResponseItem>>>()
+    val postsResponse: LiveData<PostState<List<PostResponseItem>>> = _postsResponse
 
-    private val _createPostResponse = MutableLiveData<String>()
-    val createPostResponse: LiveData<String> = _createPostResponse
+    private val _createPostResponse = MutableLiveData<PostState<String>>()
+    val createPostResponse: LiveData<PostState<String>> = _createPostResponse
 
-    private val _updatePostResponse = MutableLiveData<String>()
-    val updatePostResponse: LiveData<String> = _updatePostResponse
+    private val _updatePostResponse = MutableLiveData<PostState<String>>()
+    val updatePostResponse: LiveData<PostState<String>> = _updatePostResponse
 
-    private val _deletePostResponse = MutableLiveData<String>()
-    val deletePostResponse: LiveData<String> = _deletePostResponse
+    private val _deletePostResponse = MutableLiveData<PostState<String>>()
+    val deletePostResponse: LiveData<PostState<String>> = _deletePostResponse
 
-
-    private val _refreshPosts = MutableLiveData<Boolean>()
-    val refreshPosts: LiveData<Boolean> get() = _refreshPosts
-
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> = _error
+    private val _error = MutableLiveData<PostState<String>>()
+    val error: LiveData<PostState<String>> = _error
 
 
     fun fetchPosts() {
+        _postsResponse.postValue(PostState.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             try {
-
                 val response = postRepository.getPosts()
                 if (response.isSuccessful) {
-                    _posts.postValue(response.body())
+                    response.body()?.let {
+                        _postsResponse.postValue(PostState.Success(it))
+                    }
                 } else {
-                    _error.postValue(response.errorBody().toString())
-                    Log.e(
-                        "PostViewModel",
-                        "fetchPosts: ${_error.postValue(response.errorBody().toString())}"
-                    )
+                    _postsResponse.postValue(PostState.Error(response.errorBody()?.string()))
                 }
 
             } catch (e: Exception) {
-                _error.postValue(e.message)
-                Log.e("PostViewModel", "fetchPosts: ${_error.postValue(e.message)}")
+                _error.postValue(PostState.Error(e.message))
+                Log.e("PostViewModel", "fetchPosts: $e")
             }
         }
     }
@@ -65,12 +59,15 @@ class PostViewModel @Inject constructor(private val postRepository: PostReposito
             try {
                 val response = postRepository.createPost(createPostRequest)
                 if (response.isSuccessful) {
-                    _createPostResponse.postValue(response.body())
+                    response.body()?.let {
+                        _createPostResponse.postValue(PostState.Success(it))
+                    }
                 } else {
-                    _error.postValue(response.errorBody()?.string())
+                    _error.postValue(PostState.Error(response.errorBody()?.string()))
                 }
 
             } catch (e: Exception) {
+                _error.postValue(PostState.Error(e.message))
                 Log.e("PostViewModel", "createPost: $e")
             }
         }
@@ -82,9 +79,11 @@ class PostViewModel @Inject constructor(private val postRepository: PostReposito
             try {
                 val response = postRepository.updatePost(updatePostRequest)
                 if (response.isSuccessful) {
-                    _updatePostResponse.postValue(response.body())
+                    response.body()?.let {
+                        _updatePostResponse.postValue(PostState.Success(it))
+                    }
                 } else {
-                    _error.postValue(response.errorBody()?.string())
+                    _error.postValue(PostState.Error(response.errorBody()?.string()))
                 }
 
             } catch (e: Exception) {
@@ -99,19 +98,17 @@ class PostViewModel @Inject constructor(private val postRepository: PostReposito
             try {
                 val response = postRepository.deletePost(id)
                 if (response.isSuccessful) {
-                    _deletePostResponse.postValue(response.body())
+                    response.body()?.let {
+                        _deletePostResponse.postValue(PostState.Success(it))
+                    }
                 } else {
-                    _error.postValue(response.code().toString())
+                    _error.postValue(PostState.Error(response.errorBody()?.string()))
                 }
             } catch (e: Exception) {
                 Log.e("PostViewModel", "deletePost: $e")
             }
 
         }
-    }
-
-    fun refreshPosts() {
-        _refreshPosts.value = true
     }
 
 }

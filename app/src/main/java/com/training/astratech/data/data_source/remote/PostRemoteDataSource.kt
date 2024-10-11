@@ -1,10 +1,10 @@
 package com.training.astratech.data.data_source.remote
 
 import com.training.astratech.data.api.ApiService
-import com.training.astratech.data.model.CreatePostRequest
-import com.training.astratech.data.model.DeletePostRequest
+import com.training.astratech.domain.model.CreatePostRequest
+import com.training.astratech.domain.model.DeletePostRequest
 import com.training.astratech.data.model.PostResponse
-import com.training.astratech.data.model.UpdatePostRequest
+import com.training.astratech.domain.model.UpdatePostRequest
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

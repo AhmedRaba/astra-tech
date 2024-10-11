@@ -1,7 +1,6 @@
 package com.training.astratech.data.api
 
-import com.training.astratech.data.model.CreatePostRequest
-import com.training.astratech.data.model.DeletePostRequest
+import com.training.astratech.domain.model.DeletePostRequest
 import com.training.astratech.data.model.PostResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -32,6 +31,7 @@ interface ApiService {
     suspend fun deletePost(
         @Body request: DeletePostRequest,
     ): Response<String>
+
 
     @POST("create")
     @Multipart

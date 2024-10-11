@@ -13,6 +13,7 @@ import com.training.astratech.R
 import com.training.astratech.data.model.PostResponseItem
 import com.training.astratech.databinding.FragmentHomeBinding
 import com.training.astratech.ui.adapter.PostAdapter
+import com.training.astratech.ui.view_model.PostState
 import com.training.astratech.ui.view_model.PostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,7 +39,7 @@ class HomeFragment : Fragment() {
         setupRecyclerView()
         observeViewModels()
         fetchPosts()
-        addPost()
+        navToAddFragment()
 
     }
 
@@ -48,40 +49,61 @@ class HomeFragment : Fragment() {
 
 
     private fun observeViewModels() {
-        viewModel.posts.observe(viewLifecycleOwner) {
-            updatePostsList(it)
-        }
+        viewModel.postsResponse.observe(viewLifecycleOwner) {
+            when (it) {
+                is PostState.Success -> {
+                    Log.e("+++++++", "++++++++: ", )
+                    showLoading(false)
+                    updatePostsList(it.data)
+                }
 
-        viewModel.refreshPosts.observe(viewLifecycleOwner) { shouldRefresh ->
-            if (shouldRefresh) {
-                fetchPosts()
+                is PostState.Error -> {
+                    showSnackBar(it.message.toString())
+                    showLoading(false)
+                }
+
+                PostState.Loading -> showLoading(true)
             }
         }
 
+
+
         viewModel.error.observe(viewLifecycleOwner) {
             Log.e("HomeFragment", "observeViewModels: $it")
-            showSnackBar(it)
+            showSnackBar(it.toString())
         }
     }
 
-    private fun fetchPosts() {
+     fun fetchPosts() {
         viewModel.fetchPosts()
     }
 
     private fun updatePostsList(posts: List<PostResponseItem>) {
         val adapter = PostAdapter(posts) {
-            val action =
-                HomeFragmentDirections.actionHomeFragmentToPostDetailsFragment(it)
+            val action = HomeFragmentDirections.actionHomeFragmentToPostDetailsFragment(it)
             findNavController().navigate(action)
         }
         binding.rvPost.adapter = adapter
     }
 
 
-    private fun addPost() {
+    private fun navToAddFragment() {
         binding.fabAddPost.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_addPostDialogFragment)
         }
+    }
+
+
+    private fun showLoading(shouldLoad: Boolean) {
+        if (shouldLoad) {
+
+            binding.progressBarHome.visibility = View.VISIBLE
+            binding.rvPost.visibility = View.GONE
+        } else {
+            binding.progressBarHome.visibility = View.GONE
+            binding.rvPost.visibility = View.VISIBLE
+        }
+
     }
 
 
