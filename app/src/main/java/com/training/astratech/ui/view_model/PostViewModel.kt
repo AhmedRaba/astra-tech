@@ -43,7 +43,7 @@ class PostViewModel @Inject constructor(private val postRepository: PostReposito
                         _postsResponse.postValue(PostState.Success(it))
                     }
                 } else {
-                    _postsResponse.postValue(PostState.Error(response.errorBody()?.string()))
+                    _error.postValue(PostState.Error(response.errorBody()?.string()))
                 }
 
             } catch (e: Exception) {

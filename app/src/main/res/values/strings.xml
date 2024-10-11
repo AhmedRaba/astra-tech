@@ -9,4 +9,5 @@
     <string name="add_post">Add post</string>
     <string name="delete">Delete</string>
     <string name="post_app">Post App</string>
+    <string name="retry">Retry</string>
 </resources>

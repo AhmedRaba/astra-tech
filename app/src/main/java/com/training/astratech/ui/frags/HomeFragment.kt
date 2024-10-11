@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
         viewModel.postsResponse.observe(viewLifecycleOwner) {
             when (it) {
                 is PostState.Success -> {
-                    Log.e("+++++++", "++++++++: ", )
+                    Log.e("+++++++", "++++++++: ")
                     showLoading(false)
                     updatePostsList(it.data)
                 }
@@ -60,21 +60,22 @@ class HomeFragment : Fragment() {
                 is PostState.Error -> {
                     showSnackBar(it.message.toString())
                     showLoading(false)
+                    showRetryButton(true)
                 }
 
                 PostState.Loading -> showLoading(true)
             }
         }
 
-
-
         viewModel.error.observe(viewLifecycleOwner) {
-            Log.e("HomeFragment", "observeViewModels: $it")
             showSnackBar(it.toString())
+            showLoading(false)
+            showRetryButton(true)
         }
     }
 
-     fun fetchPosts() {
+    fun fetchPosts() {
+        showRetryButton(false)
         viewModel.fetchPosts()
     }
 
@@ -96,14 +97,24 @@ class HomeFragment : Fragment() {
 
     private fun showLoading(shouldLoad: Boolean) {
         if (shouldLoad) {
-
             binding.progressBarHome.visibility = View.VISIBLE
             binding.rvPost.visibility = View.GONE
         } else {
             binding.progressBarHome.visibility = View.GONE
             binding.rvPost.visibility = View.VISIBLE
         }
+    }
 
+    private fun showRetryButton(shouldShow: Boolean) {
+        if (shouldShow) {
+            binding.btnRetry.visibility = View.VISIBLE
+            binding.rvPost.visibility = View.GONE
+            binding.btnRetry.setOnClickListener {
+                fetchPosts()
+            }
+        } else {
+            binding.btnRetry.visibility = View.GONE
+        }
     }
 
 

@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.AstraTech" parent="Theme.Material3.DayNight.NoActionBar">
 
@@ -8,11 +8,17 @@
 
     <style name="Theme.AstraTech" parent="Base.Theme.AstraTech" />
 
-<style name="TextInputStyle">
-    <item name="boxStrokeColor">@color/green</item>
-    <item name="cursorColor">@color/green</item>
-    <item name="hintTextColor">@color/green</item>
-</style>
+    <style name="TextInputStyle">
+        <item name="boxStrokeColor">@color/green</item>
+        <item name="cursorColor">@color/green</item>
+        <item name="hintTextColor">@color/green</item>
+    </style>
+
+    <style name="SaveButtonStyle">
+        <item name="backgroundTint">@color/green</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
 
 
 </resources>
